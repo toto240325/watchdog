@@ -63,9 +63,11 @@ def sendEmail(subject,body,attachedFileStr):
         print ("!!!!!!!!!!!!! just sent an email !!!!!!!!!!")
         print (cmd)
     else:
+        flog.write("executing : " + cmd+'\n')
         print (cmd)
         ostemp = os.popen(cmd).readline()
         print("ostemp : " + ostemp)
+        flog.write("result : " + ostemp'\n')
 
 
 
