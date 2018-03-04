@@ -61,13 +61,14 @@ def sendEmail(subject,body,attachedFileStr):
         
     if myHostname == "L02DI1453375DIT":
         print ("!!!!!!!!!!!!! just sent an email !!!!!!!!!!")
+        flog.write("!!!!!!!!!!!!! just sent an email !!!!!!!!!!\n")
         print (cmd)
     else:
         flog.write("executing : " + cmd+'\n')
         print (cmd)
         ostemp = os.popen(cmd).readline()
         print("ostemp : " + ostemp)
-        flog.write("result : " + ostemp'\n')
+        flog.write("result : " + ostemp + '\n')
 
 
 
