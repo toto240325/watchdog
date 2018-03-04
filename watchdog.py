@@ -45,8 +45,8 @@ def myCheck(myBool):
         return "NOK->"
 
 
-def sendEmail():
-    cmd = 'sendEmail -f toto240325@gmail.com -t toto240325@gmail.com -u "test" -m "my message" -s smtp.voo.be:25 -a /tmp/test.txt'
+def sendEmail(subject,body,attachedFileStr):
+    cmd = ('sendEmail -f toto240325@gmail.com -t toto240325@gmail.com -u "%s" -m "%s" -s smtp.voo.be:25 -a %s' % (subject,body,attachedFileStr))
         
     if myHostname == "L02DI1453375DIT":
         print ("!!!!!!!!!!!!! just sent an email !!!!!!!!!!")
@@ -56,6 +56,11 @@ def sendEmail():
 
 
 myHostname = socket.gethostname()
+
+if myHostname == "L02DI1453375DIT":
+    myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
+else:
+    myTmpFile = "~/watchdog.tmp"
 
 print ("python version : " + sys.version)
 now1=datetime.datetime.now()
@@ -81,23 +86,22 @@ isGetLastWindowOK = (now1 <= lastGetWindowDatetime      + delayGetLastWindow)
 isUploadingFileOK = (now1 <= lastUploadingFileDatetime  + delayUploadingfile)
 
 
-
-if (now1 >= lastGetWindowDatetime + delayGetLastWindow) :
-    print("problem with GetWindow !")
-    isGetLastWindowOK = False
-else:
-    print("no problem found !")
-        
-
-
-
 if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     print("at least one problem found; sending email !")
+
+    msg =       myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
+    msg = msg + myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
+    msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
+
+    print(msg)
+
     print(myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S'))
     print(myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S'))
     print(myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S'))
 
-    sendEmail()
+    tmpfile=open(myTmpFile,"w")
+    tmpfile.write(msg)
+    sendEmail("my subject", "my body", myTmpFile)
 
             
 
