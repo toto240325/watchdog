@@ -52,7 +52,9 @@ def sendEmail(subject,body,attachedFileStr):
         print ("!!!!!!!!!!!!! just sent an email !!!!!!!!!!")
         print (cmd)
     else:
+        print (cmd)
         ostemp = os.popen(cmd).readline()
+        print("ostemp : " + ostemp)
 
 
 myHostname = socket.gethostname()
@@ -102,6 +104,7 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
 
     tmpfile=open(myTmpFile,"w")
     tmpfile.write(msg)
+    tmpfile.close()
     sendEmail("my subject", "my body", myTmpFile)
 
             
