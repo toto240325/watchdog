@@ -13,8 +13,8 @@ import requests
 
 requestTimeout = 1000 	# timeout for requests
 delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
-delayGetLastWindow=datetime.timedelta(seconds=30)
-delayUploadingfile=datetime.timedelta(seconds=2*60*60*24)
+delayGetLastWindow=datetime.timedelta(seconds=30*10000)
+delayUploadingfile=datetime.timedelta(seconds=60*60*24*365)
 
 def getLastEventDatetime(eventType):
     url = 'http://192.168.0.147/monitor/getEvent.php?eventFct=getLastEventByType&type='+eventType
