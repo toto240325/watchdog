@@ -16,6 +16,17 @@ delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
 delayGetLastWindow=datetime.timedelta(seconds=30*10000)
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365)
 
+myHostname = socket.gethostname()
+
+if myHostname == "L02DI1453375DIT":
+    myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
+    myLogFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.log"
+else:
+    myTmpFile = "/home/toto/projects/watchdog/watchdog.tmp"
+    myLogFile = "/home/toto/projects/watchdog/watchdog.log"
+
+
+
 def getLastEventDatetime(eventType):
     url = 'http://192.168.0.147/monitor/getEvent.php?eventFct=getLastEventByType&type='+eventType
     r = requests.get(url, timeout=requestTimeout)
@@ -57,21 +68,22 @@ def sendEmail(subject,body,attachedFileStr):
         print("ostemp : " + ostemp)
 
 
-myHostname = socket.gethostname()
-
-if myHostname == "L02DI1453375DIT":
-    myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
-else:
-    myTmpFile = "/home/toto/projects/watchdog/watchdog.tmp"
 
 print ("python version : " + sys.version)
 now1=datetime.datetime.now()
-time_str = time.strftime("%H:%M:%S", time.localtime())
-datetime_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-print(time_str)
+#time_str = time.strftime("%H:%M:%S", time.localtime())
+#datetime_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+#print(time_str)
+print(now1.strftime('%Y-%m-%d %H:%M:%S'))
+
+
+
 print("myHostname : "+myHostname)
-print ("now : " + str(now1))
 print ("starting")
+
+flog=open(myLogFile,"a")
+flog.write("---------------------\n")
+flog.write("Starting watchdog on %s\n" % (now1.strftime('%Y-%m-%d %H:%M:%S')))
 
 
 #lastGetWindowStr = "2018-03-03 21:37:43";
@@ -80,8 +92,6 @@ print ("starting")
 lastBackupDatetime = getLastEventDatetime("backup P702");
 lastUploadingFileDatetime = getLastEventDatetime("uploading file");
 lastGetWindowDatetime = getLastWindowDatetime();
-
-
 
 isBackupOK =        (now1 <= lastBackupDatetime         + delayBackup)
 isGetLastWindowOK = (now1 <= lastGetWindowDatetime      + delayGetLastWindow)
@@ -107,7 +117,12 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     tmpfile.close()
     sendEmail("my subject", "my body", myTmpFile)
 
-            
+
+now1=datetime.datetime.now()
+flog.write("Ending watchdog on %s\n" % (now1.strftime('%Y-%m-%d %H:%M:%S')))
+flog.close()
+
+          
 
 
 
