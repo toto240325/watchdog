@@ -60,7 +60,7 @@ myHostname = socket.gethostname()
 if myHostname == "L02DI1453375DIT":
     myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
 else:
-    myTmpFile = "/home/toto/project/watchdog/watchdog.tmp"
+    myTmpFile = "/home/toto/projects/watchdog/watchdog.tmp"
 
 print ("python version : " + sys.version)
 now1=datetime.datetime.now()
