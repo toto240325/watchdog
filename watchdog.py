@@ -60,7 +60,7 @@ myHostname = socket.gethostname()
 if myHostname == "L02DI1453375DIT":
     myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
 else:
-    myTmpFile = "~/watchdog.tmp"
+    myTmpFile = "/home/toto/project/watchdog/watchdog.tmp"
 
 print ("python version : " + sys.version)
 now1=datetime.datetime.now()
@@ -94,10 +94,11 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
 
     print(msg)
-
+    '''
     print(myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S'))
     print(myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S'))
     print(myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S'))
+    '''
 
     tmpfile=open(myTmpFile,"w")
     tmpfile.write(msg)
