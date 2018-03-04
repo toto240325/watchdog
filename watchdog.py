@@ -1,0 +1,108 @@
+#  !/usr/bin/env python
+# this script checks a few things around and sends an email if something is weird
+#
+
+import os
+import sys
+import socket
+import time
+import datetime
+import subprocess
+import json
+import requests
+
+requestTimeout = 1000 	# timeout for requests
+delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
+delayGetLastWindow=datetime.timedelta(seconds=30)
+delayUploadingfile=datetime.timedelta(seconds=2*60*60*24)
+
+def getLastEventDatetime(eventType):
+    url = 'http://192.168.0.147/monitor/getEvent.php?eventFct=getLastEventByType&type='+eventType
+    r = requests.get(url, timeout=requestTimeout)
+    #print(r.content)
+    # r.content supposed to be something like this : 
+    #   {"records":[{"id":"254","time":"2018-03-03 21:37:43","host":"L02DI1453375DIT","text":"incremental backup P702 to googleDrive via mypc3","type":"backup P702"}],"errMsg":""}\
+    j=json.loads(r.content)
+    lastEventDatetimeStr= j['records'][0]['time']
+    #print("URL : " + url + "   eventType : " + eventType + "   finished on " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    myDatetime = datetime.datetime.strptime(lastEventDatetimeStr, '%Y-%m-%d %H:%M:%S')
+    return myDatetime
+
+def getLastWindowDatetime():
+    url = 'http://192.168.0.147/monitor/getLastTimeWindowTitle.php'
+    r = requests.get(url, timeout=requestTimeout)
+    #print(r.content)
+    j=json.loads(r.content)
+    lastEventDatetimeStr= j['time']
+    myDatetime = datetime.datetime.strptime(lastEventDatetimeStr, '%Y-%m-%d %H:%M:%S')
+    return myDatetime
+
+
+def myCheck(myBool):
+    if myBool: 
+        return "     "
+    else:
+        return "NOK->"
+
+
+def sendEmail():
+    cmd = 'sendEmail -f toto240325@gmail.com -t toto240325@gmail.com -u "test" -m "my message" -s smtp.voo.be:25 -a /tmp/test.txt'
+        
+    if myHostname == "L02DI1453375DIT":
+        print ("!!!!!!!!!!!!! just sent an email !!!!!!!!!!")
+        print (cmd)
+    else:
+        ostemp = os.popen(cmd).readline()
+
+
+myHostname = socket.gethostname()
+
+print ("python version : " + sys.version)
+now1=datetime.datetime.now()
+time_str = time.strftime("%H:%M:%S", time.localtime())
+datetime_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+print(time_str)
+print("myHostname : "+myHostname)
+print ("now : " + str(now1))
+print ("starting")
+
+
+#lastGetWindowStr = "2018-03-03 21:37:43";
+#lastGetWindowDate = datetime.datetime.strptime(lastGetWindowStr, '%Y-%m-%d %H:%M:%S')
+
+lastBackupDatetime = getLastEventDatetime("backup P702");
+lastUploadingFileDatetime = getLastEventDatetime("uploading file");
+lastGetWindowDatetime = getLastWindowDatetime();
+
+
+
+isBackupOK =        (now1 <= lastBackupDatetime         + delayBackup)
+isGetLastWindowOK = (now1 <= lastGetWindowDatetime      + delayGetLastWindow)
+isUploadingFileOK = (now1 <= lastUploadingFileDatetime  + delayUploadingfile)
+
+
+
+if (now1 >= lastGetWindowDatetime + delayGetLastWindow) :
+    print("problem with GetWindow !")
+    isGetLastWindowOK = False
+else:
+    print("no problem found !")
+        
+
+
+
+if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
+    print("at least one problem found; sending email !")
+    print(myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S'))
+    print(myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S'))
+    print(myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S'))
+
+    sendEmail()
+
+            
+
+
+
+
+
+
