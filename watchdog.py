@@ -10,6 +10,11 @@ import datetime
 import subprocess
 import json
 import requests
+from platform   import system as system_name  # Returns the system/OS name
+from subprocess import call   as system_call  # Execute a shell command
+
+import sendmail
+
 
 requestTimeout = 1000 	# timeout for requests
 delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
@@ -25,6 +30,23 @@ else:
     myTmpFile = "/home/toto/projects/watchdog/watchdog.tmp"
     myLogFile = "/home/toto/projects/watchdog/watchdog.log"
 
+
+
+def ping(host):
+    """
+    Returns True if host (str) responds to a ping request.
+    Remember that a host may not respond to a ping (ICMP) request even if the host name is valid.
+    """
+
+    # Ping command count option as function of OS
+    param = '-n 1' if system_name().lower()=='windows' else '-c 1'
+
+    # Building the command. Ex: "ping -c 1 google.com"
+    command = ['ping', param, host]
+
+    # Pinging
+    print("command : %s" % (command))
+    return system_call(command) == 0
 
 
 def getLastEventDatetime(eventType):
@@ -84,6 +106,9 @@ print(now1.strftime('%Y-%m-%d %H:%M:%S'))
 print("myHostname : "+myHostname)
 print ("starting")
 
+hostToPing = "192.168.0.147"
+print("pinging %s : %s" % (hostToPing,str(ping(hostToPing))))
+
 flog=open(myLogFile,"a")
 flog.write("---------------------\n")
 flog.write("Starting watchdog on %s\n" % (now1.strftime('%Y-%m-%d %H:%M:%S')))
@@ -118,7 +143,16 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     tmpfile=open(myTmpFile,"w")
     tmpfile.write(msg)
     tmpfile.close()
-    sendEmail("my subject", "my body", myTmpFile)
+
+
+    user_name = "toto240325mailer@gmail.com"
+    passwd = "Toto060502!n"
+    from_email = "toto240325@gmail.com"
+    to_email = "toto240325@gmail.com"
+    subject = "this is my subject"
+    body = "this is my email body"
+
+    sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myTmpFile)
 
 
 now1=datetime.datetime.now()
