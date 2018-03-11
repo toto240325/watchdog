@@ -21,7 +21,7 @@ requestTimeout = 1000 	# timeout for requests
 delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365)
 #delay to check for GetLastWindow depend on whether mypc3 is up or down
-shortDelayGetLastWindow=datetime.timedelta(seconds=30)
+shortDelayGetLastWindow=datetime.timedelta(seconds=3)
 longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
 
 mypc3 = "192.168.0.2"
@@ -86,8 +86,8 @@ def sendEmail(subject,body,attachedFileStr):
 now1=datetime.datetime.now()
 #time_str = time.strftime("%H:%M:%S", time.localtime())
 #datetime_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-#print(time_str)
-print("Starting on " + now1.strftime('%Y-%m-%d %H:%M:%S'))
+nowStr = now1.strftime('%Y-%m-%d %H:%M:%S')
+print("Starting on " + nowStr)
 print("myHostname : "+myHostname)
 
 flog=open(myLogFile,"a")
@@ -140,8 +140,8 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     passwd = "Toto060502!n"
     from_email = "toto240325@gmail.com"
     to_email = "toto240325@gmail.com"
-    subject = "this is my subject"
-    body = "this is my email body"
+    subject = "Watchdog on " + nowStr
+    body = msg
 
     sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myTmpFile)
 
