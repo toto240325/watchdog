@@ -4,7 +4,7 @@ from platform   import system as system_name  # Returns the system/OS name
 from subprocess import call   as system_call  # Execute a shell command
 import subprocess
 
-def myping(myhost):
+def ping(myhost):
 
     """
     Returns True if host (str) responds to a ping request.
@@ -36,10 +36,10 @@ def testPing():
     #testing the function 
 
     myhost = "192.168.0.117"
-    print("host %s : %s" % (myhost,myping(myhost)))
+    print("host %s : %s" % (myhost,ping(myhost)))
 
     myhost = "192.168.0.147"
-    print("host %s : %s" % (myhost,myping(myhost)))
+    print("host %s : %s" % (myhost,ping(myhost)))
 
 #main
-testPing()
+#testPing()

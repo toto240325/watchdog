@@ -14,12 +14,17 @@ from platform   import system as system_name  # Returns the system/OS name
 from subprocess import call   as system_call  # Execute a shell command
 
 import sendmail
+from ping import ping
 
 
 requestTimeout = 1000 	# timeout for requests
 delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
-delayGetLastWindow=datetime.timedelta(seconds=30*10000)
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365)
+#delay to check for GetLastWindow depend on whether mypc3 is up or down
+shortDelayGetLastWindow=datetime.timedelta(seconds=30)
+longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
+
+mypc3 = "192.168.0.2"
 
 myHostname = socket.gethostname()
 
@@ -31,22 +36,6 @@ else:
     myLogFile = "/home/toto/projects/watchdog/watchdog.log"
 
 
-
-def ping(host):
-    """
-    Returns True if host (str) responds to a ping request.
-    Remember that a host may not respond to a ping (ICMP) request even if the host name is valid.
-    """
-
-    # Ping command count option as function of OS
-    param = '-n 1' if system_name().lower()=='windows' else '-c 1'
-
-    # Building the command. Ex: "ping -c 1 google.com"
-    command = ['ping', param, host]
-
-    # Pinging
-    print("command : %s" % (command))
-    return system_call(command) == 0
 
 
 def getLastEventDatetime(eventType):
@@ -93,21 +82,13 @@ def sendEmail(subject,body,attachedFileStr):
         flog.write("result : " + ostemp + '\n')
 
 
-
-print ("python version : " + sys.version)
+#print ("python version : " + sys.version)
 now1=datetime.datetime.now()
 #time_str = time.strftime("%H:%M:%S", time.localtime())
 #datetime_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 #print(time_str)
-print(now1.strftime('%Y-%m-%d %H:%M:%S'))
-
-
-
+print("Starting on " + now1.strftime('%Y-%m-%d %H:%M:%S'))
 print("myHostname : "+myHostname)
-print ("starting")
-
-hostToPing = "192.168.0.147"
-print("pinging %s : %s" % (hostToPing,str(ping(hostToPing))))
 
 flog=open(myLogFile,"a")
 flog.write("---------------------\n")
@@ -122,18 +103,28 @@ lastUploadingFileDatetime = getLastEventDatetime("uploading file");
 lastGetWindowDatetime = getLastWindowDatetime();
 
 isBackupOK =        (now1 <= lastBackupDatetime         + delayBackup)
-isGetLastWindowOK = (now1 <= lastGetWindowDatetime      + delayGetLastWindow)
+
+# if mypc3 is up then check if getwindow was OK very recently, otherwise check that it ran at least 24h ago
+mypc3Up = ping(mypc3)
+if (mypc3Up):
+    isGetLastWindowOK = (now1 <= lastGetWindowDatetime      + shortDelayGetLastWindow)
+else:
+    isGetLastWindowOK = (now1 <= lastGetWindowDatetime      + longDelayGetLastWindow)
+
+
 isUploadingFileOK = (now1 <= lastUploadingFileDatetime  + delayUploadingfile)
 
+
+msg ="everything seems to be OK"
 
 if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     print("at least one problem found; sending email !")
 
-    msg =       myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
+    msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n"
+    msg = msg + myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
     msg = msg + myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
     msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
 
-    print(msg)
     '''
     print(myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S'))
     print(myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S'))
@@ -152,9 +143,11 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     subject = "this is my subject"
     body = "this is my email body"
 
-    sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myTmpFile)
+    #sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myTmpFile)
 
-
+print(msg)
+flog.write(msg)
+    
 now1=datetime.datetime.now()
 flog.write("Ending watchdog on %s\n" % (now1.strftime('%Y-%m-%d %H:%M:%S')))
 flog.close()
