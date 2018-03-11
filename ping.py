@@ -13,7 +13,7 @@ def myping(myhost):
     # Ping command count option as function of OS
     param = '-n 1' if system_name().lower()=='windows' else '-c 1'
     command = "ping %s %s" % (param,myhost)
-    ping_response = subprocess.Popen(command, stdout=subprocess.PIPE).stdout.read() 
+    ping_response = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read() 
     #print("ping resp : %s" % ping_response)
 
     #will be something like this :
@@ -31,12 +31,15 @@ def myping(myhost):
     return pingOK
 
 #--------------------------------------
-#testing the function 
 
-myhost = "192.168.0.117"
-print("host %s : %s" % (myhost,myping(myhost)))
+def testPing():
+    #testing the function 
 
-myhost = "192.168.0.147"
-print("host %s : %s" % (myhost,myping(myhost)))
+    myhost = "192.168.0.117"
+    print("host %s : %s" % (myhost,myping(myhost)))
 
+    myhost = "192.168.0.147"
+    print("host %s : %s" % (myhost,myping(myhost)))
 
+#main
+testPing()
