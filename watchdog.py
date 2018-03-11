@@ -143,7 +143,7 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     subject = "this is my subject"
     body = "this is my email body"
 
-    #sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myTmpFile)
+    sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myTmpFile)
 
 print(msg)
 flog.write(msg)
