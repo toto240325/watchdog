@@ -21,7 +21,7 @@ requestTimeout = 1000 	# timeout for requests
 delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365)
 #delay to check for GetLastWindow depend on whether mypc3 is up or down
-shortDelayGetLastWindow=datetime.timedelta(seconds=3)
+shortDelayGetLastWindow=datetime.timedelta(seconds=30)
 longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
 
 mypc3 = "192.168.0.2"
@@ -62,9 +62,9 @@ def getLastWindowDatetime():
 
 def myCheck(myBool):
     if myBool: 
-        return "     "
+        return '<p style="color:black;">'
     else:
-        return "NOK->"
+        return '<p style="color:red;">NOK->'
 
 
 def sendEmail(subject,body,attachedFileStr):
@@ -120,10 +120,10 @@ msg ="everything seems to be OK"
 if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     print("at least one problem found; sending email !")
 
-    msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n"
-    msg = msg + myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
-    msg = msg + myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
-    msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n"
+    msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n<p>"
+    msg = msg + myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
+    msg = msg + myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
+    msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
 
     '''
     print(myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S'))
@@ -143,7 +143,20 @@ if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
     subject = "Watchdog on " + nowStr
     body = msg
 
-    sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myTmpFile)
+    htmlbody = """\
+    <html>
+    <head></head>
+    <body>
+    <FONT FACE="courier">
+    """
+    htmlbody = htmlbody + body + """\
+        </FONT>
+    </body>
+    </html>
+    """
+    
+
+    sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, htmlbody, myTmpFile)
 
 print(msg)
 flog.write(msg)

@@ -5,7 +5,6 @@ happy hacking!!!
 '''
 
 import datetime
-
 import smtplib
 
 from email.mime.multipart import MIMEMultipart
@@ -13,7 +12,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
 
-def mySend(user_name, passwd, from_email, to_email, subject, body, myfileName):
+def mySend(user_name, passwd, from_email, to_email, subject, body, htmlbody, myfileName):
 
     msg = MIMEMultipart()
 
@@ -21,7 +20,23 @@ def mySend(user_name, passwd, from_email, to_email, subject, body, myfileName):
     msg['To'] = to_email
     msg['Subject'] = subject
 
-    msg.attach( MIMEText(body) )
+
+        
+    #-----------------------------------------------
+  
+    # Record the MIME types of both parts - text/plain and text/html.
+    part1 = MIMEText(body, 'plain')
+    part2 = MIMEText(htmlbody, 'html')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+    msg.attach(part2)
+    #-----------------------------------------------
+
+    #msg.attach( MIMEText(body) )
+
     part = MIMEBase('application', "octet-stream")
 
     fo=open(myfileName,"rb")
@@ -39,3 +54,46 @@ def mySend(user_name, passwd, from_email, to_email, subject, body, myfileName):
     server.close()
 
 #--------------------------------------------------------
+
+
+#import sendmail
+#import datetime
+
+def testMySend():
+    now1=datetime.datetime.now()
+    nowStr = now1.strftime('%Y-%m-%d %H:%M:%S')
+
+    print("Starting on %s" % nowStr)
+
+    user_name = "toto240325mailer@gmail.com"
+    passwd = "Toto060502!n"
+    from_email = "toto240325@gmail.com"
+    to_email = "toto240325@gmail.com"
+    subject = "this is my subject on " + nowStr
+    body = "this is my email body"
+
+    # Create the body of the message (a plain-text and an HTML version).
+    htmlbody = """\
+    <html>
+    <head></head>
+    <body>
+    <FONT FACE="courier">
+    """
+    htmlbody = htmlbody + body + """\
+        </FONT>
+        <p>End of message<br>
+        Here is a test <a href="http://www.python.org">link</a>.
+        </p>
+    </body>
+    </html>
+    """
+
+    myfileName = "c:\\Users\\derruer\\mydata\\projects\\watchdog\\sendmailTest.py"
+
+    #sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myfileName)
+    mySend(user_name, passwd, from_email, to_email, subject, body, htmlbody, myfileName)
+    print("email sent to %s" % (to_email))
+
+#main
+#testMySend()
+

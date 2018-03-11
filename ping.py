@@ -25,7 +25,7 @@ def ping(myhost):
     #    Minimum = 0ms, Maximum = 0ms, Average = 0ms
 
     pingOK = True
-    if (b'unreachable' in ping_response.lower()):
+    if ((b'unreachable' in ping_response.lower()) or (b'request timed out' in ping_response.lower())):
         pingOK = False
 
     return pingOK
@@ -39,6 +39,9 @@ def testPing():
     print("host %s : %s" % (myhost,ping(myhost)))
 
     myhost = "192.168.0.147"
+    print("host %s : %s" % (myhost,ping(myhost)))
+
+    myhost = "192.168.0.2"
     print("host %s : %s" % (myhost,ping(myhost)))
 
 #main
