@@ -24,6 +24,9 @@ delayUploadingfile=datetime.timedelta(seconds=60*60*24*365)
 shortDelayGetLastWindow=datetime.timedelta(seconds=30)
 longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
 
+systematicEmailSendTime = 20  # always send an email at that time of the day, even if everything OK
+
+
 mypc3 = "192.168.0.2"
 
 myHostname = socket.gethostname()
@@ -114,11 +117,21 @@ else:
 
 isUploadingFileOK = (now1 <= lastUploadingFileDatetime  + delayUploadingfile)
 
-
 msg ="everything seems to be OK"
 
-if (not isBackupOK) or (not isGetLastWindowOK) or (not isUploadingFileOK):
-    print("at least one problem found; sending email !")
+sendAnyway = (now1.hour <= systematicEmailSendTime) and (now1.hour+1 > systematicEmailSendTime)
+
+if ((not isBackupOK) or 
+    (not isGetLastWindowOK) or 
+    (not isUploadingFileOK) or
+    sendAnyway
+    ):
+    
+    if not sendAnyway: 
+        print("at least one problem found; sending email !")
+    if sendAnyway:
+        print("sending anywy because it's time to recap the situation")
+    
 
     msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n<p>"
     msg = msg + myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
