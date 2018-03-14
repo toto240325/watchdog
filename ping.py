@@ -11,7 +11,7 @@ def ping(myhost):
     Remember that a host may not respond to a ping (ICMP) request even if the host name is valid.
     """
     # Ping command count option as function of OS
-    param = '-n 1' if system_name().lower()=='windows' else '-c 1'
+    param = '-n 1 -w 2' if system_name().lower()=='windows' else '-c 1 -w 2'
     command = "ping %s %s" % (param,myhost)
     ping_response = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read() 
     #print("ping resp : %s" % ping_response)
@@ -25,7 +25,11 @@ def ping(myhost):
     #    Minimum = 0ms, Maximum = 0ms, Average = 0ms
 
     pingOK = True
-    if ((b'unreachable' in ping_response.lower()) or (b'request timed out' in ping_response.lower())):
+    if ((b'100% loss' in ping_response.lower()) or 
+        (b'100% packet loss' in ping_response.lower()) or 
+        (b'unreachable' in ping_response.lower()) or 
+        (b'request timed out' in ping_response.lower())
+        ):
         pingOK = False
 
     return pingOK
@@ -45,4 +49,4 @@ def testPing():
     print("host %s : %s" % (myhost,ping(myhost)))
 
 #main
-#testPing()
+testPing()
