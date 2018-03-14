@@ -127,13 +127,14 @@ if ((not isBackupOK) or
     sendAnyway
     ):
     
+    msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n<p>"
+    
     if not sendAnyway: 
-        print("at least one problem found; sending email !")
+        msg = msg + "at least one problem found; sending email !" + "\n<p>"
     if sendAnyway:
-        print("sending anywy because it's time to recap the situation")
+        msg = msg + "sending anywy because it's time to recap the situation" + "\n<p>"
     
 
-    msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n<p>"
     msg = msg + myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
     msg = msg + myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
     msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
