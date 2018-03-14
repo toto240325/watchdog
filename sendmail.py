@@ -31,8 +31,8 @@ def mySend(user_name, passwd, from_email, to_email, subject, body, htmlbody, myf
     # Attach parts into message container.
     # According to RFC 2046, the last part of a multipart message, in this case
     # the HTML message, is best and preferred.
-    msg.attach(part1)
     msg.attach(part2)
+    msg.attach(part1)
     #-----------------------------------------------
 
     #msg.attach( MIMEText(body) )

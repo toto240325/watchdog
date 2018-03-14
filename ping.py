@@ -49,4 +49,4 @@ def testPing():
     print("host %s : %s" % (myhost,ping(myhost)))
 
 #main
-testPing()
+#testPing()
