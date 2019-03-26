@@ -18,9 +18,14 @@ from ping import ping
 
 
 requestTimeout = 1000 	# timeout for requests
+<<<<<<< HEAD
 delayBackup=datetime.timedelta(seconds=60*60*24*2 + 2*60*60)
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365*10)
 
+=======
+delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
+delayUploadingfile=datetime.timedelta(seconds=60*60*24*365*10) # 10 years, until I reactivate the raspberry camera ;-)
+>>>>>>> 561eb0855902848780292adab5ebd4558829d970
 #delay to check for GetLastWindow depend on whether mypc3 is up or down
 shortDelayGetLastWindow=datetime.timedelta(seconds=30)
 longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
@@ -128,13 +133,14 @@ if ((not isBackupOK) or
     sendAnyway
     ):
     
+    msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n<p>"
+    
     if not sendAnyway: 
-        print("at least one problem found; sending email !")
+        msg = msg + "at least one problem found; sending email !" + "\n<p>"
     if sendAnyway:
-        print("sending anywy because it's time to recap the situation")
+        msg = msg + "sending anywy because it's time to recap the situation" + "\n<p>"
     
 
-    msg = "(NB : mypc3 is %s)" % ("up" if mypc3Up else "down") + "\n<p>"
     msg = msg + myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
     msg = msg + myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
     msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
