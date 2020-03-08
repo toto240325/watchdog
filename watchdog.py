@@ -18,7 +18,7 @@ from ping import ping
 
 
 requestTimeout = 1000 	# timeout for requests
-delayBackup=datetime.timedelta(seconds=60*60*24*5)  # backup must have been done less than x days ago
+delayBackup=datetime.timedelta(seconds=60*60*24*6)  # backup must have been done less than x days ago
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365*10) # 10 years, until I reactivate the raspberry camera ;-)
 #delay to check for GetLastWindow depend on whether mypc3 is up or down
 shortDelayGetLastWindow=datetime.timedelta(seconds=30)
