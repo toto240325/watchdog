@@ -18,7 +18,7 @@ from ping import ping
 
 
 requestTimeout = 1000 	# timeout for requests
-delayBackup=datetime.timedelta(seconds=60*60*24 + 2*60*60)
+delayBackup=datetime.timedelta(seconds=60*60*24*5)  # backup must have been done less than x days ago
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365*10) # 10 years, until I reactivate the raspberry camera ;-)
 #delay to check for GetLastWindow depend on whether mypc3 is up or down
 shortDelayGetLastWindow=datetime.timedelta(seconds=30)
@@ -27,11 +27,11 @@ longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
 systematicEmailSendTime = 20  # always send an email at that time of the day, even if everything OK
 
 
-mypc3 = "192.168.0.2"
+mypc3 = "192.168.0.99"
 
 myHostname = socket.gethostname()
 
-if myHostname == "L02DI1453375DIT":
+if myHostname == "L194827317":
     myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
     myLogFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.log"
 else:
@@ -101,7 +101,7 @@ flog.write("Starting watchdog on %s\n" % (now1.strftime('%Y-%m-%d %H:%M:%S')))
 #lastGetWindowStr = "2018-03-03 21:37:43";
 #lastGetWindowDate = datetime.datetime.strptime(lastGetWindowStr, '%Y-%m-%d %H:%M:%S')
 
-lastBackupDatetime = getLastEventDatetime("backup P702");
+lastBackupDatetime = getLastEventDatetime("backup L390Y");
 lastUploadingFileDatetime = getLastEventDatetime("uploading file");
 lastGetWindowDatetime = getLastWindowDatetime();
 
