@@ -1,0 +1,6 @@
+params.py
+*.pyc
+*.old
+*.log*
+*.tmp
+
