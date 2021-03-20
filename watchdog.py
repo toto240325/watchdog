@@ -116,9 +116,9 @@ mylog("Starting watchdog")
 #lastGetWindowStr = "2018-03-03 21:37:43";
 #lastGetWindowDate = datetime.datetime.strptime(lastGetWindowStr, '%Y-%m-%d %H:%M:%S')
 
-lastBackupDatetime = getLastEventDatetime("backup L390Y");
-lastUploadingFileDatetime = getLastEventDatetime("uploading file");
-lastGetWindowDatetime = getLastWindowDatetime();
+lastBackupDatetime = getLastEventDatetime("backup L390Y")
+lastUploadingFileDatetime = getLastEventDatetime("uploading file")
+lastGetWindowDatetime = getLastWindowDatetime()
 
 isBackupOK =        (now1 <= lastBackupDatetime         + delayBackup)
 
