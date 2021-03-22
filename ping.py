@@ -24,6 +24,9 @@ def ping(myhost):
     #Approximate round trip times in milli-seconds:
     #    Minimum = 0ms, Maximum = 0ms, Average = 0ms
 
+    #print("ping response :>"+ping_response+"<")
+    if ping_response == "":
+      return False
     pingOK = True
     if ((b'100% loss' in ping_response.lower()) or 
         (b'100% packet loss' in ping_response.lower()) or 
