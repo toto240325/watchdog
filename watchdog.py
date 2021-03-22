@@ -1,4 +1,4 @@
-#  !/usr/bin//env python
+#!/usr/bin//env python
 # -*- coding: UTF-8 -*-
 # this script checks a few things around and sends an email if something is weird
 #
@@ -39,8 +39,8 @@ if myHostname == "L194827317":
     myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
     myLogFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.log"
 else:
-    myTmpFile = "/home/toto/projects/watchdog/watchdog.tmp"
-    myLogFile = "/home/toto/projects/watchdog/watchdog.log"
+    myTmpFile = "/home/toto/tmp/watchdog.tmp"
+    myLogFile = "/home/toto/log/watchdog.log"
 
 
 def getLastEventDatetime(eventType):
