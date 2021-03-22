@@ -38,6 +38,9 @@ myHostname = socket.gethostname()
 if myHostname == "L194827317":
     myTmpFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.tmp"
     myLogFile = "C:\\Users\\derruer\\mydata\\mytemp\\watchdog.log"
+elif myHostname == "mypc3":
+    myTmpFile = "d:\\temp\\watchdog.tmp"
+    myLogFile = "d:\\temp\\watchdog.log"
 else:
     myTmpFile = "/home/toto/tmp/watchdog.tmp"
     myLogFile = "/home/toto/log/watchdog.log"
@@ -174,7 +177,7 @@ if ((not isBackupOK) or
     mailer_pw = params.mailer_pw
     from_email = params.from_email
     to_email = params.to_email
-    subject = "Watchdog on " + nowStr
+    subject = "Watchdog on " + myHostname + " on " + nowStr
     body = msg
 
     htmlbody = """\
