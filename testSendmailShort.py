@@ -1,7 +1,6 @@
 #  !/usr/bin/env python
 #
-import "/home/toto/utils/ping"
-import "mysendmail"
+import mysendmail
 import datetime
 import params
 import socket

@@ -1,1 +1,1 @@
-/home/toto/utils/ping.py
+/home/pi/utils/ping.py
