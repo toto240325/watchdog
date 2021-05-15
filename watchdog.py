@@ -25,7 +25,8 @@ delayUploadingfile=datetime.timedelta(seconds=60*60*24*365*10) # 10 years, until
 shortDelayGetLastWindow=datetime.timedelta(seconds=60)
 longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
 
-systematicEmailSendTime = 20  # always send an email at that time of the day, even if everything OK
+systematicEmailSendTimeHH = 20  # always send an email at that time of the day, even if everything OK
+systematicEmailSendTimeMM = 30  # always send an email at that time of the day, even if everything OK
 
 
 
@@ -139,7 +140,7 @@ pi3Up = ping(pi3)
 
 msg ="everything seems to be OK"
 
-sendAnyway = (now1.hour <= systematicEmailSendTime) and (now1.hour+1 > systematicEmailSendTime)
+sendAnyway = (now1.hour == systematicEmailSendTimeHH) and (now1.minute <= systematicEmailSendTimeMM) and (now1.minute+10 > systematicEmailSendTimeMM)
 
 if ((not isBackupOK) or 
     (not isGetLastWindowOK) or 
