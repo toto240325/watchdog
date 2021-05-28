@@ -32,6 +32,7 @@ systematicEmailSendTime = 20  # always send an email at that time of the day, ev
 mypc3 = "192.168.0.99"
 pi0 = "192.168.0.90"
 pi3 = "192.168.0.93"
+pi4 = "192.168.0.94"
 
 myHostname = socket.gethostname()
 
@@ -135,9 +136,9 @@ else:
 
 isUploadingFileOK = (now1 <= lastUploadingFileDatetime  + delayUploadingfile)
 
-mylog("Just before ping pi3")
-pi3Up = ping(pi3)
-mylog("Just after ping pi3")
+mylog("Just before ping pi4")
+pi4Up = ping(pi4)
+mylog("Just after ping pi4")
 
 msg ="everything seems to be OK"
 
@@ -146,7 +147,7 @@ sendAnyway = (now1.hour <= systematicEmailSendTime) and (now1.hour+1 > systemati
 if ((not isBackupOK) or 
     (not isGetLastWindowOK) or 
     (not isUploadingFileOK) or
-    (not pi3Up) or
+    (not pi4Up) or
     sendAnyway
     ):
     
@@ -161,7 +162,7 @@ if ((not isBackupOK) or
     msg = msg + myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
     msg = msg + myCheck(isGetLastWindowOK)    + "lastGetWindowDatetime    : " + lastGetWindowDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
     msg = msg + myCheck(isUploadingFileOK)    + "lastUploadingFileDatetime: " + lastUploadingFileDatetime.strftime('%Y-%m-%d %H:%M:%S') + "\n<p>"
-    msg = msg + myCheck(pi3Up)    + "pi3 is %s" % ("up" if pi3Up else "down") + "\n<p>"
+    msg = msg + myCheck(pi4Up)    + "pi4 is %s" % ("up" if pi4Up else "down") + "\n<p>"
 
     '''
     print(myCheck(isBackupOK)           + "lastBackupDatetime       : " + lastBackupDatetime.strftime('%Y-%m-%d %H:%M:%S'))
