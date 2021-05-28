@@ -14,7 +14,7 @@ import requests
 from platform   import system as system_name  # Returns the system/OS name
 from subprocess import call   as system_call  # Execute a shell command
 
-import sendmail
+import mysendmail
 from ping import ping
 import params
 
@@ -43,9 +43,12 @@ if myHostname == "L194827317":
 elif myHostname == "mypc3":
     myTmpFile = "d:\\temp\\watchdog.tmp"
     myLogFile = "d:\\temp\\watchdog.log"
+elif myHostname == "pi1":
+    myTmpFile = "/home/pi/watchdog.tmp"
+    myLogFile = "/home/pi/watchdog.log"
 else:
-    myTmpFile = "/home/toto/tmp/watchdog.tmp"
-    myLogFile = "/home/toto/log/watchdog.log"
+    myTmpFile = "/home/toto/watchdog.tmp"
+    myLogFile = "/home/toto/watchdog.log"
 
 
 def getLastEventDatetime(eventType):
@@ -195,7 +198,7 @@ if ((not isBackupOK) or
     </html>
     """
 
-    sendmail.mySend(mailer, mailer_pw, from_email, to_email, subject, body, htmlbody, myTmpFile)
+    mysendmail.mySend(mailer, mailer_pw, from_email, to_email, subject, body, htmlbody, myTmpFile)
 
 #print(msg)
 mylog(msg)
