@@ -13,7 +13,10 @@ nowStr = now1.strftime('%Y-%m-%d %H:%M:%S')
 
 hostname = socket.gethostname()
 mailer = params.mailer
+mailer = "toto240325@gmail.com"
 mailer_pw = params.mailer_pw
+mailer_pw = "Toto060502!nz"
+
 from_email = params.from_email
 to_email = params.to_email
 subject = "Test from " + thisScript + " on " + hostname + " at " + nowStr

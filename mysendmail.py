@@ -91,14 +91,50 @@ def testMySend():
 
     #myfileName = "c:\\Users\\derruer\\mydata\\projects\\watchdog\\sendmailTest.py"
     myfileName = "/tmp/a.txt"
+    f = open(myfileName,"a")
+    f.write("test")
+    f.close()
 
     #sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myfileName)
     mySend(user_name, passwd, from_email, to_email, subject, body, htmlbody, myfileName)
     print("email sent to %s" % (to_email))
 
+def myShortSendmail(subject,message):
+  try:
+    msg = MIMEMultipart()
+
+    mailer = params.mailer
+    mailer_pw = params.mailer_pw
+    msg['From'] = params.from_email
+    msg['To'] = params.to_email
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(message, 'plain'))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+
+    server.login(mailer, mailer_pw)
+    server.sendmail(msg['From'],msg['To'], msg.as_string())
+    server.close()
+
+
+    #server = smtplib.SMTP('smtp.gmail.com: 587')
+    #server.starttls()
+    #server.login(msg['From'], password)
+    #server.sendmail(msg['From'], msg['To'], msg.as_string())
+    #server.quit()
+  except Exception as error:
+    msg = "there was an exception : " + str(error)
+    print(msg)
+
+
+
 #-------------------------
 def main():
-    testMySend()
+  testMySend()
+  myShortSendmail("test","this is the body") 
 
 if __name__ == "__main__":
     main()
