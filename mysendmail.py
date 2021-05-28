@@ -6,6 +6,7 @@ happy hacking!!!
 
 import datetime
 import smtplib
+import params
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -65,10 +66,10 @@ def testMySend():
 
     print("Starting on %s" % nowStr)
 
-    user_name = "toto240325mailer@gmail.com"
-    passwd = "Toto060502!n"
-    from_email = "toto240325@gmail.com"
-    to_email = "toto240325@gmail.com"
+    user_name = params.mailer
+    passwd = params.mailer_pw
+    from_email = params.from_email
+    to_email = params.to_email
     subject = "this is my subject on " + nowStr
     body = "this is my email body"
 
@@ -88,12 +89,17 @@ def testMySend():
     </html>
     """
 
-    myfileName = "c:\\Users\\derruer\\mydata\\projects\\watchdog\\sendmailTest.py"
+    #myfileName = "c:\\Users\\derruer\\mydata\\projects\\watchdog\\sendmailTest.py"
+    myfileName = "/tmp/a.txt"
 
     #sendmail.mySend(user_name, passwd, from_email, to_email, subject, body, myfileName)
     mySend(user_name, passwd, from_email, to_email, subject, body, htmlbody, myfileName)
     print("email sent to %s" % (to_email))
 
-#main
-#testMySend()
+#-------------------------
+def main():
+    testMySend()
+
+if __name__ == "__main__":
+    main()
 

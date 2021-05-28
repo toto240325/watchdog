@@ -22,10 +22,11 @@ requestTimeout = 1000 	# timeout for requests
 delayBackup=datetime.timedelta(seconds=60*60*24*8)  # backup must have been done less than x days ago
 delayUploadingfile=datetime.timedelta(seconds=60*60*24*365*10) # 10 years, until I reactivate the raspberry camera ;-)
 #delay to check for GetLastWindow depend on whether mypc3 is up or down
-shortDelayGetLastWindow=datetime.timedelta(seconds=30)
+shortDelayGetLastWindow=datetime.timedelta(seconds=60)
 longDelayGetLastWindow=datetime.timedelta(seconds=60*60*24*10) # 10 days
 
-systematicEmailSendTime = 20  # always send an email at that time of the day, even if everything OK
+systematicEmailSendTimeHH = 20  # always send an email at that time of the day, even if everything OK
+systematicEmailSendTimeMM = 30  # always send an email at that time of the day, even if everything OK
 
 
 
@@ -139,10 +140,11 @@ isUploadingFileOK = (now1 <= lastUploadingFileDatetime  + delayUploadingfile)
 mylog("Just before ping pi4")
 pi4Up = ping(pi4)
 mylog("Just after ping pi4")
+pi3Up = ping(pi3)
 
 msg ="everything seems to be OK"
 
-sendAnyway = (now1.hour <= systematicEmailSendTime) and (now1.hour+1 > systematicEmailSendTime)
+sendAnyway = (now1.hour == systematicEmailSendTimeHH) and (now1.minute <= systematicEmailSendTimeMM) and (now1.minute+10 > systematicEmailSendTimeMM)
 
 if ((not isBackupOK) or 
     (not isGetLastWindowOK) or 
