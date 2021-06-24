@@ -1,5 +1,6 @@
 #  !/usr/bin/env python
 #
+
 import mysendmail
 import datetime
 import params
@@ -32,11 +33,11 @@ def mailNotif(to_email,thisScript):
 def log(bStatus):
   now1=datetime.datetime.now()
   nowStr = now1.strftime('%Y-%m-%d %H:%M:%S')
-  mylog = "/home/pi/watchdog/PS4.log"
-  msg = nowStr + "," + ("1" if bStatus else "0")
-  print("PS4 is " + ("Up" if bStatus else "Down") + " " + msg)
+  mylog = "/tmp/PS4.log"
+  msg = nowStr + " PS4 is " + ("Up" if bStatus else "Down")
+  print msg
   f = open(mylog,"a")
-  f.write(msg)
+  f.write(msg + "\n")
   f.close()
 
 # main ---------------------------------------------------
@@ -49,10 +50,10 @@ PS4 = "192.168.0.40"
 sec = 0
 while True:
   try:
-    if sec % 5 == 0:
+    if sec % 60 == 0:
       log(ping(PS4))
 
-    if sec % 10 == 0:
+    if sec % 60*10 == 0:
       if ping(PS4):
         mailNotif(to_email,thisScript)
 
